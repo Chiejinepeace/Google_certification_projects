@@ -1,0 +1,81 @@
+---
+title: "Analysis on Palmer Penguins dataset"
+author: "Chiejine Peace"
+date: "2023-03-04"
+output: pdf_document
+
+---
+
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set (error = TRUE)
+```
+
+# Data analysis on the Palmerpenguins data set
+
+## Setting up my environment
+
+Notes: setting up my environment by loading the *tidyverse* and *palmerpenguins* packages
+
+```{r}
+install.packages("tidyverse")
+library(tidyverse)
+install.packages("palmerpenguins")
+library(palmerpenguins)
+```
+
+## View the data set
+
+Notes: View the data set and note column names
+
+```{r}
+View(penguins)
+```
+
+## Transform data set
+
+Notes: Transform columns *body_mass_g* and *flipper_length_mm* to new columns measured in kilograms and meters respectively. Name new columns *body_mass_kg* and *flipper_length_m*
+
+```{r}
+penguins_viz <- penguins %>% 
+  select(species, sex, body_mass_g, flipper_length_mm) %>% 
+  mutate(body_mass_kg = body_mass_g / 1000, flipper_length_m = flipper_length_mm / 1000)
+head(penguins_viz)
+```
+
+## Visualization 1
+
+Scatterplot (*with trendline*) chart to show the relationship between body mass(kg) and flipper length (m) '
+
+```{r}
+ggplot(penguins_viz) + 
+  geom_smooth( mapping = aes(x =flipper_length_m, y = body_mass_kg)) +
+  geom_point( mapping = aes(x =flipper_length_m, y = body_mass_kg, shape = species))
+```
+
+## Visualization 2
+
+Notes: Line chart visualization to show relationship between flipper length and body_mass for distinct species of penguins
+
+```{r}
+
+ggplot(penguins_viz) +
+  geom_smooth(mapping = aes(x =flipper_length_m, y = body_mass_kg, linetype = species)) + 
+  facet_wrap(~species)
+
+```
+
+## Visualization 3
+
+Notes: Facet wrap to show relationship between flipper length and body mass for distinct species and sex.
+
+```{r}
+ggplot(penguins_viz) +
+  geom_point(mapping = aes(x =flipper_length_m, y = body_mass_kg, color = species)) + 
+  facet_grid(~sex~species)
+
+```
+
+## Conclusion
+
+There is a relationship between body mass and flipper length for all species of penguins withe Gentoo specie being the largest and having longer flipper lengths than the other species.
